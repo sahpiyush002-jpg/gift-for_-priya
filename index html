@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>A Gift For PRIYA 💝</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,700&display=swap" rel="stylesheet">
+<style>
+:root { --primary: #ff4d6d; --bg: #c0392b; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{width:100%;height:100%;font-family:'Poppins',sans-serif;background:var(--bg);color:#fff;overflow:hidden;}
+
+#bg-canvas { position: fixed; inset: 0; background: radial-gradient(circle at center, #e8453c 0%, #c0392b 70%, #8e1a12 100%); z-index: -1; }
+.petal{position:fixed;pointer-events:none;z-index:0;opacity:0;animation:petalFall linear infinite;}
+@keyframes petalFall{0%{opacity:0;transform:translateY(-20px) rotate(0deg);}10%{opacity:.5;}90%{opacity:.1;}100%{opacity:0;transform:translateY(105vh) rotate(360deg);}}
+
+.page { display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; z-index: 10; padding: 20px; }
+.page.active { display: flex; animation: pgIn 0.55s cubic-bezier(.22,1,.36,1) both; }
+@keyframes pgIn{from{opacity:0;transform:scale(.96) translateY(14px);}to{opacity:1;transform:none;}}
+
+.polaroid { background: white; padding: 10px 10px 35px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transform: rotate(var(--r, -3deg)); width: min(200px, 60vw); position: relative; }
+.polaroid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+.polaroid span { color: #333; font-family: 'Dancing Script'; font-size: 1.1rem; display: block; margin-top: 10px; text-align: center; }
+
+.btn-main { background: #fff; color: var(--bg); border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; margin-top: 25px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+
+/* MUSIC PLAYER */
+.vinyl-disc { width: 180px; height: 180px; border-radius: 50%; background: #111; position: relative; border: 5px solid #222; animation: spin 4s linear infinite paused; overflow: hidden; }
+.vinyl-disc.spinning { animation-play-state: running; }
+.vinyl-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* PASSCODE */
+.dot { width: 15px; height: 15px; border: 2px solid #fff; border-radius: 50%; margin: 0 8px; }
+.dot.filled { background: #fff; box-shadow: 0 0 10px #fff; }
+.kkey { width: 60px; height: 60px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); color: white; font-size: 1.2rem; cursor: pointer; }
+
+/* CAMERA EJECT */
+.ejected { position: absolute; bottom: 36%; opacity: 0; transform: translateX(-50%); transition: 2s; width: 120px; z-index: -1; left: 50%; clip-path: inset(92% 0 0 0); }
+.ejected.shoot { opacity: 1; transform: translateX(-50%) translateY(-120px) rotate(-10deg); clip-path: inset(0 0 0 0); }
+
+#flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 1000; }
+.flash-on { animation: flashAnim 0.4s ease-out; }
+@keyframes flashAnim { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div id="bg-canvas"></div>
+<div id="petals-c"></div>
+<div id="flash"></div>
+
+<div class="page active" id="p-lock">
+    <div class="polaroid" style="--r:-4deg; margin-bottom: 30px;"><img src="photo1.png"><span>For PRIYA 💕</span></div>
+    <div style="display:flex; margin-bottom: 20px;"><div class="dot" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div></div>
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+        <button class="kkey" onclick="tap(1)">1</button><button class="kkey" onclick="tap(2)">2</button><button class="kkey" onclick="tap(3)">3</button>
+        <button class="kkey" onclick="tap(4)">4</button><button class="kkey" onclick="tap(5)">5</button><button class="kkey" onclick="tap(6)">6</button>
+        <button class="kkey" onclick="tap(7)">7</button><button class="kkey" onclick="tap(8)">8</button><button class="kkey" onclick="tap(9)">9</button>
+        <div></div><button class="kkey" onclick="tap(0)">0</button><button class="kkey" onclick="del()">⌫</button>
+    </div>
+</div>
+
+<div class="page" id="p-cam">
+    <h2 style="font-family:'Playfair Display'; margin-bottom:30px; text-align: center;">SMILE bandariya 🐒</h2>
+    <div style="position:relative; width:260px; height:200px; background:#333; border-radius:15px; border:5px solid #444; z-index: 20;">
+        <div style="width:80px; height:80px; background:#111; border-radius:50%; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); border:5px solid #222;"></div>
+        <div class="polaroid ejected" id="eject-p"><img src="photo2.png"><span style="font-size:10px;">PRIYA 💕</span></div>
+    </div>
+    <button class="btn-main" id="btn-snap" onclick="snap()">📸 TAKE PICTURE</button>
+    <button class="btn-main" id="btn-next-cam" style="display:none;" onclick="go('p-reveal')">NEXT →</button>
+</div>
+
+<div class="page" id="p-reveal">
+    <h2 style="font-family:'Dancing Script'; font-size:2rem; margin-bottom:20px; text-align:center;">OMG ladki ho ya sundari 😍<br><span style="font-size: 1.2rem; opacity: 0.8;">PRIYA 💕</span></h2>
+    <div class="polaroid" style="--r:4deg; width:220px;"><img src="photo2.png"><span>Sundari ✨</span></div>
+    <button class="btn-main" onclick="go('p-hub')">OPEN GIFTS 🎁</button>
+</div>
+
+<div class="page" id="p-hub">
+    <h2 style="font-family:'Dancing Script'; font-size:2.5rem; margin-bottom:30px;">Gifts for you</h2>
+    <div style="display:flex; gap:25px;">
+        <div onclick="go('p-letter')" style="cursor:pointer; font-size:3.5rem;">💌</div>
+        <div onclick="go('p-gallery')" style="cursor:pointer; font-size:3.5rem;">📸</div>
+        <div onclick="go('p-music')" style="cursor:pointer; font-size:3.5rem;">🎵</div>
+    </div>
+</div>
+
+<div class="page" id="p-letter" style="background:#fffafa; color:#333; overflow-y:auto; justify-content: flex-start; padding-top: 40px;">
+    <div style="background:white; padding:25px; border-radius:10px; width:90%; max-width:400px; box-shadow:0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <h2 style="font-family:'Dancing Script'; color:var(--bg); font-size: 1.8rem;">Dear PRIYA,</h2>
+        <p style="margin:15px 0; line-height:1.6; font-family:'Playfair Display';">smjh me nhi aa rha h kya likhe isiliye<br><br>thank you ☺️<br><br>Gussa mat hona itna kam likhe h to 😅</p>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <img src="photo3.png" style="width:80px; height:80px; border-radius:5px; object-fit: cover;">
+            <img src="photo4.png" style="width:80px; height:80px; border-radius:5px; object-fit: cover;">
+        </div>
+        <p style="font-family:'Dancing Script'; margin-top: 20px; text-align: right;">— yours always 💕</p>
+    </div>
+    <button class="btn-main" onclick="go('p-hub')" style="background:#333; color:#fff;">BACK</button>
+</div>
+
+<div class="page" id="p-gallery">
+    <h2 style="font-family:'Dancing Script'; font-size:2rem; margin-bottom:20px;">Best Moments</h2>
+    <div style="display:flex; gap:15px; overflow-x:auto; width:100vw; padding:20px;">
+        <div class="polaroid" style="--r:-2deg; flex-shrink:0; width:170px;"><img src="photo5.png"><span>Sweet 💙</span></div>
+        <div class="polaroid" style="--r:3deg; flex-shrink:0; width:170px;"><img src="photo6.png"><span>Forever 🌟</span></div>
+        <div class="polaroid" style="--r:-1deg; flex-shrink:0; width:170px;"><img src="photo7.png"><span>Together 💕</span></div>
+    </div>
+    <button class="btn-main" onclick="go('p-hub')">BACK</button>
+</div>
+
+<div class="page" id="p-music">
+    <h2 style="font-family:'Dancing Script'; margin-bottom:20px;">Our Song 🎵</h2>
+    <div class="vinyl-disc" id="vinyl">
+        <img src="photo8.png" class="vinyl-img">
+        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:40px; height:40px; background:#fff; border-radius:50%; border:4px solid #111;"></div>
+    </div>
+    <div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:10px; width:280px; margin-top:20px; display:flex; align-items:center; gap:10px;">
+        <img src="photo8.png" style="width:50px; height:50px; border-radius:5px;">
+        <div>
+            <div style="font-size:0.8rem; font-weight:600;">Our Special Song</div>
+            <div style="font-size:0.6rem; opacity:0.7;">Piyush & PRIYA</div>
+        </div>
+        <button onclick="toggleMusic()" id="play-btn" style="margin-left:auto; background:white; border:none; width:35px; height:35px; border-radius:50%; color:var(--bg); cursor:pointer;">▶</button>
+    </div>
+    <button class="btn-main" onclick="go('p-hub')">BACK</button>
+</div>
+
+<audio id="bg-music" loop><source src="song.mp3" type="audio/mpeg"></audio>
+
+<script>
+let input = "";
+const go = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); };
+const tap = (n) => { 
+    if(input.length < 4) { 
+        input+=n; 
+        updateDots(); 
+        if(input==="2208") setTimeout(()=>go('p-cam'), 300); 
+        else if(input.length===4) {alert("Wrong!"); input=""; updateDots();} 
+    }
+};
+const del = () => { input=input.slice(0,-1); updateDots(); };
+const updateDots = () => { for(let i=0;i<4;i++) document.getElementById('d'+i).classList.toggle('filled', i<input.length); };
+
+function snap() {
+    document.getElementById('flash').classList.add('flash-on');
+    document.getElementById('eject-p').classList.add('shoot');
+    document.getElementById('btn-snap').style.display = 'none';
+    setTimeout(()=> { document.getElementById('flash').classList.remove('flash-on'); document.getElementById('btn-next-cam').style.display='inline-block'; }, 2200);
+}
+
+let isPlaying = false;
+function toggleMusic() {
+    const m = document.getElementById('bg-music');
+    const v = document.getElementById('vinyl');
+    if(!isPlaying) { m.play(); v.classList.add('spinning'); isPlaying=true; document.getElementById('play-btn').innerText="⏸"; }
+    else { m.pause(); v.classList.remove('spinning'); isPlaying=false; document.getElementById('play-btn').innerText="▶"; }
+}
+
+// PETALS
+setInterval(() => {
+    const p = document.createElement('span'); p.className='petal';
+    p.textContent=['🌸','❤️','✨'][Math.floor(Math.random()*3)];
+    p.style.left=Math.random()*100+'%'; p.style.fontSize=Math.random()*1.5+0.5+'rem';
+    p.style.animationDuration=Math.random()*10+5+'s';
+    document.getElementById('petals-c').appendChild(p);
+    setTimeout(()=>p.remove(), 10000);
+}, 500);
+</script>
+</body>
+</html>
